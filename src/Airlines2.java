@@ -1,6 +1,7 @@
 
 
 //import java.io.File;
+//import java.io.File;
 import java.util.Date;
 
 import org.apache.hadoop.conf.Configuration;
@@ -27,8 +28,8 @@ public class Airlines2 extends Configured implements Tool{
     public int run(String[] args) throws Exception {
     	System.out.println("in run");
     
-        if (args.length != 3) {
-            System.out.println("usage: [input] [output] [output1] .");
+        if (args.length != 2) {
+            System.out.println("usage: [input] [output]  .");
             System.exit(-1);
         }
         
@@ -60,7 +61,7 @@ public class Airlines2 extends Configured implements Tool{
         job.setOutputFormatClass(TextOutputFormat.class);
 
         FileInputFormat.setInputPaths(job, new Path(args[0]));
-       FileOutputFormat.setOutputPath(job, new Path(args[1]));
+       FileOutputFormat.setOutputPath(job, new Path(args[1]+"temp"));
 
         job.setJarByClass(Airlines2.class);
         job.waitForCompletion(true);
@@ -79,8 +80,8 @@ public class Airlines2 extends Configured implements Tool{
         job2.setInputFormatClass(TextInputFormat.class);
         job2.setOutputFormatClass(TextOutputFormat.class);
 
-        FileInputFormat.setInputPaths(job2, new Path(args[1]));
-       FileOutputFormat.setOutputPath(job2, new Path(args[2]));
+        FileInputFormat.setInputPaths(job2, new Path(args[1]+"temp"));
+       FileOutputFormat.setOutputPath(job2, new Path(args[1]));
 
         job2.setJarByClass(Airlines2.class);
         job2.waitForCompletion(true);
@@ -88,8 +89,10 @@ public class Airlines2 extends Configured implements Tool{
         System.out.println("Time for mapping in job2:"+(ComparisionMapper.efmap-ComparisionMapper.sfmap));
         System.out.println("Time for reducing in job2:"+(ComparisionReducer.efred-ComparisionReducer.sfred));
         System.out.println("Time for job completion in job2: "+(end2-start2));
-        
+        //deleteDir(new File(args[1]+"temp"));
         System.out.println("run end");
         return 0;
     }
+       // System.out.println("The directory is deleted.");
+    
 }
